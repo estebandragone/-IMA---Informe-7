@@ -1,0 +1,22 @@
+import numpy as np
+import soundfile as sf
+
+
+def avgIR(y, fs, n, sweepdur, intdur):
+    """
+    :param y: Audio data (get from audioRead).
+    :param fs: sampling frequency in Hz.
+    :param n: Number of sweeps.
+    :param sweepdur: Duration of sweeps in seconds.
+    :param intdur: Duration of interval between sweeps in seconds.
+    :return: avg: Average of all IRs.
+    """
+    block = (sweepdur+intdur)*fs
+    sweeps = []
+    for i in range(n):
+        sweep = y[i*block:(i+1)*block]
+        sweeps.append(sweep)
+    avg = np.average(sweeps, 0)
+    filename = 'SweepAvg_' + str(fs) + 'Hz_' + str(n) + 'sweeps.wav'
+    sf.write(filename, avg, fs)
+    return avg
